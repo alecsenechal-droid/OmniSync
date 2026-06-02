@@ -178,10 +178,12 @@ def _navigate_to_lea_via_sso(page: Page, config: Config) -> bool:
     href = lea_link.get_attribute("href") or ""
     log(f"  [LEA-SSO] Lien trouve: {href[:70]}")
     expected = f"C={config.institution_code}"
-    if expected not in href:
-        log(f"  [{config.slug}] WARN SSO mismatch: href ne contient pas {expected} (href={href[:80]})")
-    else:
+    if expected in href:
         log(f"  [{config.slug}] SSO OK vers LEA")
+    elif "lk=" in href:
+        log(f"  [{config.slug}] SSO OK vers LEA (format lk=, C= absent)")
+    else:
+        log(f"  [{config.slug}] WARN SSO mismatch: href ne contient pas {expected} (href={href[:80]})")
     lea_link.click()
     wait_net(page, config.timeout_ms)
     deadline = time.time() + 20
@@ -233,10 +235,12 @@ def _ensure_estd(page: Page, config: Config) -> None:
         href = estd_link.get_attribute("href") or ""
         log(f"  [ESTD-SSO] Lien trouve: {href[:70]}")
         expected = f"C={config.institution_code}"
-        if expected not in href:
-            log(f"  [{config.slug}] WARN SSO mismatch: href ne contient pas {expected} (href={href[:80]})")
-        else:
+        if expected in href:
             log(f"  [{config.slug}] SSO OK vers ESTD")
+        elif "lk=" in href:
+            log(f"  [{config.slug}] SSO OK vers ESTD (format lk=, C= absent)")
+        else:
+            log(f"  [{config.slug}] WARN SSO mismatch: href ne contient pas {expected} (href={href[:80]})")
         estd_link.click()
         wait_net(page, config.timeout_ms)
         deadline = time.time() + 20

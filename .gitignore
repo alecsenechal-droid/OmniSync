@@ -52,6 +52,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Claude Code private instructions (contains personal data)
+CLAUDE.md
+
 # Debug screenshots (login flow)
 step*.png
 v2_*.png
