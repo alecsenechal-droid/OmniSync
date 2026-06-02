@@ -1,0 +1,58 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+build/
+dist/
+
+# Local config and secrets
+.env
+.env.*
+!.env.example
+config.toml
+credentials.json
+token.json
+client_secret*.json
+storage_state*.json
+
+# Runtime data
+.runtime/
+omnivox.db
+*.db
+*.sqlite
+*.sqlite3
+*-wal
+*-shm
+browser_profile/
+.playwright/
+logs/
+debug/
+debug_*.png
+*.log
+*.ics
+
+# School/private data
+Ecole/
+Cégep-SecondCerveau/
+graphify-out/
+_archive/
+*.pdf
+*.extracted.md
+agent_data.json
+html_fixtures/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Debug screenshots (login flow)
+step*.png
+v2_*.png
+after_signin.png

@@ -1,0 +1,35 @@
+[omnivox]
+cegep_slug = "climoilou"
+institution_code = "CLI"
+lang = "FRA"
+headless = true
+
+[calendar]
+# "auto" = OmniSync crée/trouve automatiquement un calendrier dédié nommé "OmniSync"
+# Tu peux mettre un ID spécifique si tu veux utiliser ton ancien calendrier "Cégep"
+calendar_id = "auto"
+
+[scheduler]
+sync_time = "05:00"
+
+[features]
+sync_assignments = true
+sync_exams = true
+sync_schedule = true
+sync_mio = false
+sync_moodle = true
+sync_actualites = true
+sync_documents = true
+sync_courses = true          # Cours récurrents (RRULE) - très important
+
+# === FILTRAGE ACTUALITÉS (très important) ===
+# Seules les actualités contenant au moins un de ces mots-clés seront ajoutées
+actualites_keywords = [
+    "hockey", "basketball", "volleyball", "soccer", "football", 
+    "match", "tournament", "compétition",
+    "concert", "soirée", "conférence", "expo", "spectacle",
+    "inscription", "bourse", "prêt et bourse", "stage", "emploi"
+]
+
+# Option supplémentaire (recommandée) : ignorer les actualités trop anciennes
+actualites_max_days_old = 60
