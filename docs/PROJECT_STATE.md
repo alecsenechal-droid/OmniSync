@@ -1,5 +1,5 @@
 # OmniSync — Boot Context
-updated: 2026-06-01 | 13 étapes validées | 8 en attente
+updated: 2026-06-02 | 17 étapes validées | 16 en attente
 
 ## État
 ---
@@ -9,33 +9,23 @@ updated: 2026-06-01 | 13 étapes validées | 8 en attente
 **Notifications** : actives — `omnisyncqc@gmail.com` → `alec.senechal@gmail.com`.
 **Doctor** : 15/15 PASS ✅
 **run --scrape-only** : PASS — 82 events Omnivox + 19 Moodle, `[OK] Aucune anomalie` ✅
-**Multi-cégep** : diagnostics SSO + logs préfixés + doctor checks — prêt pour beta ✅
+**Git repo** : commit `a44f243` local, remote configuré, push en attente (repo GitHub à créer)
 ---
-### Refactoring God File (session 2026-06-01)
-- `omnivox_engine.py` : 4388 → 86 lignes (thin shell). 11 modules extraits.
-- Commits : `dce848b` (refactor + SSO), `880e086` (doctor 15/15), `f54dddb` (logs slug)
+### 1. Audit documentaire complet OmniSync
+- Scraping : 9 pages visitées, 10 modules, données récupérées vs ignorées documentées
+- Sync Calendar : CRUD, RRULE, rappels, couleurs, déduplication documentés
 
 ## Architecture
 ```
 Omnivox(Playwright) + Moodle(REST) + Actualités → SQLite(%LOCALAPPDATA%\OmniSync) → Google Calendar
 ```
 
-## Modules critiques (post-refactoring)
-```
-scraper/
-  omnivox_engine.py   (86 L)  ← thin shell de re-exports
-  omnivox_models.py  (165 L)  ← dataclasses + constantes
-  omnivox_helpers.py (197 L)  ← utilitaires purs
-  omnivox_browser.py (126 L)  ← cycle de vie Playwright
-  omnivox_loader.py  (149 L)  ← MODULES + load_config()
-  omnivox_auth.py    (328 L)  ← SSO LEA/ESTD + login + MFA
-  scrape_mio.py      (480 L)  ← messagerie MIO
-  scrape_horaire.py   (91 L)  ← horaire cours
-  scrape_notes.py    (232 L)  ← notes d'évaluation
-  scrape_lea.py      (340 L)  ← documents, actualités, vue LEA
-  scrape_travaux.py  (609 L)  ← travaux et évaluations
-  scrape_calendrier.py(583 L) ← calendrier LEA, examens, ICS
-```
+## Modules critiques
+- `omnivox_engine` : Playwright — scraping LEA/Omnivox (sélecteurs figés)
+- `scraper/moodle_engine` : REST wstoken Moodle + SSO SAML2
+- `sync` : Orchestrateur pipeline principal
+- `calendar/google` : Google Calendar API — CRUD events
+- `storage/db` : SQLite — source de vérité locale
 
 ## Règles figées (JAMAIS modifier sans demande explicite)
 - `SchoolEvent` + `_dedupe()` : schéma immuable
@@ -47,23 +37,21 @@ scraper/
 
 ## Risques actifs
 - **Token Moodle** : expiration inconnue → Edge F12 → Network → launch.php → `run.bat token-moodle`
-- **Sélecteurs Omnivox** : non testés sur csfoy/cegepgarneau
-- **SSO WARN sur Limoilou** : format `lk=` (pas `C=CLI`) → faux positif cosmétique, SSO OK quand même
+- **Sélecteurs Omnivox** : fragiles aux mises à jour du portail Omnivox
 
 ## Prochaines étapes
-- **Beta testeur Ste-Foy ou Garneau** — PRIORITÉ 1 (logs prêts pour diagnostiquer)
-- **Valider cours récurrents en prod** — début août
-- **Valider écriture Calendar automne 2026** — dès session automne
-- **ESTD examens finaux** — retester en août
-- **PyInstaller .exe** — hors scope immédiat
+- **Créer repo GitHub** — github.com → New repository `alecsenechal/omnisync` (public, vide) → `git push -u origin main`
+- **Distribuer credentials.json** — GitHub Releases (pas dans le repo) pour réduire friction onboarding
+- **Déployer landing** — `cd C:\Users\alecs\Desktop\study-agent\landing-v3 && vercel deploy --prod`
+- **Intégrer setup_google.ps1** — script Agent 2B dans `scripts/setup_google.ps1` du repo
+- **Valider cours récurrents en prod** — PRIORITÉ 1
 
 ## Commandes
 ```powershell
 cd C:\Users\alecs\Desktop\Omnisync
-.\run.bat doctor                  # vérifier l'état complet (15/15)
+.\run.bat doctor                  # vérifier l'état complet
 .\run.bat run --scrape-only       # scraper sans toucher Calendar
 .\run.bat run --calendar-dry-run  # scraper + valider sans écrire Calendar
-.\run.bat run --verbose           # logs détaillés avec prefixe [climoilou]
 .\run.bat run                     # pipeline complet
 python scripts/build_memory.py     # régénérer ce fichier
 ```

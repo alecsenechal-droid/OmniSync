@@ -19,6 +19,25 @@
   - SSO validation `[{slug}]` dans `_navigate_to_lea_via_sso` + `_ensure_estd`
   - Doctor 15/15 : check slug KNOWN_CEGEPS, institution_code, moodle_url
   - Logs scraper préfixés par `[{slug}]` — 179 appels, 31 lignes `[climoilou]` en --verbose
+- [x] **Audit documentaire OmniSync** (2026-06-02) — scraping, sync, multi-cégep, install documentés
+- [x] **Analyse Google OAuth** (2026-06-02) — 3 options : 2A viable, 2B script PS, 2C impossible
+- [x] **Git repo propre initialisé** (2026-06-02) — commit a44f243, 61 fichiers, nouveau repo dans Omnisync/ (plus home dir)
+- [x] **Landing page — 5 corrections bloquantes** (2026-06-02) :
+  - HOW IT WORKS : 3 étapes → 4 (étape Google credentials ajoutée)
+  - "Google Calendar existant" → "calendrier dédié OmniSync"
+  - "Cours annulés barrés" supprimé (fonctionnalité inexistante)
+  - `[REMISE]`→`Remise:`, `[EXAM]`→`Exam:` (CalendarDemo.tsx)
+  - FAQ cégeps : V2 → Ste-Foy/Garneau déjà en code
+  - TerminalDemo : Chromium ~170 MB + prompts wizard interactifs
+
+---
+
+### 🔲 À faire — IMMÉDIAT (débloque le testeur)
+
+- [ ] **Créer repo GitHub** — github.com → New repository `alecsenechal/omnisync` (public, vide) → `git push -u origin main`
+- [ ] **Distribuer credentials.json** — GitHub Releases (pas dans le repo) pour réduire friction onboarding
+- [ ] **Déployer landing** — `cd C:\Users\alecs\Desktop\study-agent\landing-v3 && vercel deploy --prod`
+- [ ] **Intégrer setup_google.ps1** — script Agent 2B dans `scripts/setup_google.ps1` du repo
 
 ---
 
@@ -39,7 +58,7 @@
 
 ### 🔲 À faire — Beta
 
-- [ ] **Beta testeur Ste-Foy ou Garneau** — PRIORITÉ SUIVANTE
+- [ ] **Beta testeur Ste-Foy ou Garneau** — PRIORITÉ SUIVANTE (dès repo public)
   - Valide onboarding < 2 min + logs `[csfoy]` ou `[cegepgarneau]` en conditions réelles
   - Observer les frictions, documenter les sélecteurs qui diffèrent
 
@@ -50,14 +69,15 @@
 
 ---
 
-### 🔲 À faire — UX / Cleanup
+### 🔲 À faire — Landing / UX
 
-- [ ] **Reformulation log SSO Limoilou** : `SSO OK (format lk=, C= absent)` au lieu de `WARN mismatch`
-  - Petit fix cosmétique dans `_navigate_to_lea_via_sso` + `_ensure_estd`
+- [ ] **WorkflowDemo.tsx** — aligner `[REMISE]`/`[EXAM]` sur `Remise:`/`Exam:` dans les CAL_EVENTS
+- [ ] **DEVLOG.md landing** — corriger "Moodle ❌" (faux) et préfixes avec crochets (faux)
 
-- [ ] Supprimer fichiers debug :
-  `test_rebrowser.py`, `fix_config.py`, `save_token.py`,
-  `test_cookie_moodle.py`, `test_extract_cookies.py`, `test_sqlitelock.py`
+### 🔲 À faire — Cleanup
+
+- [x] **Reformulation log SSO Limoilou** : `SSO OK (format lk=, C= absent)` au lieu de `WARN mismatch` (2026-06-02)
+- [x] **Fichiers debug supprimés** — déjà absents du repo (2026-06-02)
 
 ---
 
