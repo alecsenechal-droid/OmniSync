@@ -1,5 +1,5 @@
 # OmniSync — Boot Context
-updated: 2026-06-02 | 17 étapes validées | 16 en attente
+updated: 2026-06-02 | 20 étapes validées | 14 en attente
 
 ## État
 ---
@@ -9,11 +9,11 @@ updated: 2026-06-02 | 17 étapes validées | 16 en attente
 **Notifications** : actives — `omnisyncqc@gmail.com` → `alec.senechal@gmail.com`.
 **Doctor** : 15/15 PASS ✅
 **run --scrape-only** : PASS — 82 events Omnivox + 19 Moodle, `[OK] Aucune anomalie` ✅
-**Git repo** : commit `a44f243` local, remote configuré, push en attente (repo GitHub à créer)
+**Git repo** : pushé sur `https://github.com/alecsenechal-droid/OmniSync` (public) — commit `c7e533f`
 ---
-### 1. Audit documentaire complet OmniSync
-- Scraping : 9 pages visitées, 10 modules, données récupérées vs ignorées documentées
-- Sync Calendar : CRUD, RRULE, rappels, couleurs, déduplication documentés
+### 1. Repo GitHub public en ligne (commit c7e533f)
+- `.gitignore` mis à jour : CLAUDE.md exclu (données personnelles)
+- `README-CREDENTIALS.md` : instructions distribution `credentials.json` via Releases
 
 ## Architecture
 ```
@@ -40,11 +40,11 @@ Omnivox(Playwright) + Moodle(REST) + Actualités → SQLite(%LOCALAPPDATA%\OmniS
 - **Sélecteurs Omnivox** : fragiles aux mises à jour du portail Omnivox
 
 ## Prochaines étapes
-- **Créer repo GitHub** — github.com → New repository `alecsenechal/omnisync` (public, vide) → `git push -u origin main`
-- **Distribuer credentials.json** — GitHub Releases (pas dans le repo) pour réduire friction onboarding
-- **Déployer landing** — `cd C:\Users\alecs\Desktop\study-agent\landing-v3 && vercel deploy --prod`
-- **Intégrer setup_google.ps1** — script Agent 2B dans `scripts/setup_google.ps1` du repo
-- **Valider cours récurrents en prod** — PRIORITÉ 1
+- **Télécharger credentials.json** — console.cloud.google.com/apis/credentials → OmniSync Desktop → ⬇
+- **Créer GitHub Release v1.0-beta** — attacher credentials.json, tag v1.0-beta, publier
+- **Intégrer setup_google.ps1** — script automatisation OAuth dans `scripts/setup_google.ps1`
+- **Beta testeur Ste-Foy ou Garneau** — PRIORITÉ SUIVANTE (dès credentials distribués)
+- **PyInstaller .exe** — 0 Python requis pour l'utilisateur
 
 ## Commandes
 ```powershell

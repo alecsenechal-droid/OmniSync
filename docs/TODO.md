@@ -21,23 +21,37 @@
   - Logs scraper préfixés par `[{slug}]` — 179 appels, 31 lignes `[climoilou]` en --verbose
 - [x] **Audit documentaire OmniSync** (2026-06-02) — scraping, sync, multi-cégep, install documentés
 - [x] **Analyse Google OAuth** (2026-06-02) — 3 options : 2A viable, 2B script PS, 2C impossible
-- [x] **Git repo propre initialisé** (2026-06-02) — commit a44f243, 61 fichiers, nouveau repo dans Omnisync/ (plus home dir)
-- [x] **Landing page — 5 corrections bloquantes** (2026-06-02) :
-  - HOW IT WORKS : 3 étapes → 4 (étape Google credentials ajoutée)
-  - "Google Calendar existant" → "calendrier dédié OmniSync"
-  - "Cours annulés barrés" supprimé (fonctionnalité inexistante)
-  - `[REMISE]`→`Remise:`, `[EXAM]`→`Exam:` (CalendarDemo.tsx)
-  - FAQ cégeps : V2 → Ste-Foy/Garneau déjà en code
-  - TerminalDemo : Chromium ~170 MB + prompts wizard interactifs
+- [x] **Repo GitHub public** (2026-06-02) — commit `c7e533f` pushé sur `alecsenechal-droid/OmniSync`
+- [x] **Reformulation log SSO Limoilou** (2026-06-02) — `SSO OK (format lk=, C= absent)` au lieu de WARN
+- [x] **README-CREDENTIALS.md** (2026-06-02) — instructions distribution beta
+- [x] **Fichiers debug** — absents du repo (exclus par .gitignore)
+- [x] **Projet Google Cloud OmniSync** (2026-06-02) — créé, API Calendar activée, OAuth consent publié, client Desktop créé
+- [x] **install.bat auto-download credentials.json** (2026-06-02) — Invoke-WebRequest depuis GitHub Releases
+- [x] **Landing déployée** (2026-06-02) — `https://landing-v3-blush.vercel.app`
+- [x] **Analyse onboarding 9 agents** (2026-06-02) — plan beta unifié : winget Python, wizard redesign, beta strategy
 
 ---
 
 ### 🔲 À faire — IMMÉDIAT (débloque le testeur)
 
-- [ ] **Créer repo GitHub** — github.com → New repository `alecsenechal/omnisync` (public, vide) → `git push -u origin main`
-- [ ] **Distribuer credentials.json** — GitHub Releases (pas dans le repo) pour réduire friction onboarding
-- [ ] **Déployer landing** — `cd C:\Users\alecs\Desktop\study-agent\landing-v3 && vercel deploy --prod`
-- [ ] **Intégrer setup_google.ps1** — script Agent 2B dans `scripts/setup_google.ps1` du repo
+- [ ] **Télécharger credentials.json** — console.cloud.google.com/apis/credentials → OmniSync Desktop → ⬇ — **BLOQUANT**
+- [ ] **Créer GitHub Release v1.0-beta** — attacher credentials.json, tag v1.0-beta, publier
+- [ ] **setup.bat winget Python auto-install** — si Python absent → `winget install Python.Python.3.12`
+- [ ] **Wizard redesign 5 étapes** — design exact prêt (numérotées, `step_header/ask/validate_da`), code pas encore écrit
+- [ ] **Recruter 2 beta testeurs** — 1 Ste-Foy, 1 Garneau — message WhatsApp prêt dans SESSION_HANDOFF.md
+
+---
+
+### 🔲 À faire — Beta
+
+- [ ] **Beta testeur Ste-Foy ou Garneau** — PRIORITÉ SUIVANTE (dès credentials distribués)
+  - Valide onboarding < 2 min + logs `[csfoy]` ou `[cegepgarneau]` en conditions réelles
+  - Observer les frictions, documenter les sélecteurs qui diffèrent
+
+- [ ] **PyInstaller .exe** — 0 Python requis pour l'utilisateur (spec omnisync.spec déjà prêt)
+
+- [ ] **Token Moodle : surveiller expiration**
+  - Procédure : Edge F12 → Network → launch.php → `run.bat token-moodle`
 
 ---
 
@@ -56,28 +70,11 @@
 
 ---
 
-### 🔲 À faire — Beta
-
-- [ ] **Beta testeur Ste-Foy ou Garneau** — PRIORITÉ SUIVANTE (dès repo public)
-  - Valide onboarding < 2 min + logs `[csfoy]` ou `[cegepgarneau]` en conditions réelles
-  - Observer les frictions, documenter les sélecteurs qui diffèrent
-
-- [ ] **PyInstaller .exe** — 0 Python requis pour l'utilisateur
-
-- [ ] **Token Moodle : surveiller expiration**
-  - Procédure : Edge F12 → Network → launch.php → `run.bat token-moodle`
-
----
-
 ### 🔲 À faire — Landing / UX
 
 - [ ] **WorkflowDemo.tsx** — aligner `[REMISE]`/`[EXAM]` sur `Remise:`/`Exam:` dans les CAL_EVENTS
 - [ ] **DEVLOG.md landing** — corriger "Moodle ❌" (faux) et préfixes avec crochets (faux)
-
-### 🔲 À faire — Cleanup
-
-- [x] **Reformulation log SSO Limoilou** : `SSO OK (format lk=, C= absent)` au lieu de `WARN mismatch` (2026-06-02)
-- [x] **Fichiers debug supprimés** — déjà absents du repo (2026-06-02)
+- [ ] **Déployer landing corrigée** — `cd C:\Users\alecs\Desktop\study-agent\landing-v3 && vercel deploy --prod`
 
 ---
 

@@ -1,5 +1,5 @@
 # Session Handoff — OmniSync
-## 2026-06-02 (Publication GitHub + Corrections Landing)
+## 2026-06-02 (Repo GitHub public + Google Cloud OmniSync + Beta prep)
 
 ---
 
@@ -11,41 +11,30 @@
 **Notifications** : actives — `omnisyncqc@gmail.com` → `alec.senechal@gmail.com`.
 **Doctor** : 15/15 PASS ✅
 **run --scrape-only** : PASS — 82 events Omnivox + 19 Moodle, `[OK] Aucune anomalie` ✅
-**Git repo** : commit `a44f243` local, remote configuré, push en attente (repo GitHub à créer)
+**Git repo** : pushé sur `https://github.com/alecsenechal-droid/OmniSync` (public) — commit `c7e533f`
 
 ---
 
 ## Ce qui a été livré
 
-### 1. Audit documentaire complet OmniSync
-- Scraping : 9 pages visitées, 10 modules, données récupérées vs ignorées documentées
-- Sync Calendar : CRUD, RRULE, rappels, couleurs, déduplication documentés
-- Multi-cégep : 3 cégeps dans KNOWN_CEGEPS, 1 seul testé (Limoilou)
-- Installation : flux réel documenté, blocage #1 identifié (credentials.json Google, 20-40 min)
+### 1. Repo GitHub public en ligne (commit c7e533f)
+- `.gitignore` mis à jour : CLAUDE.md exclu (données personnelles)
+- `README-CREDENTIALS.md` : instructions distribution `credentials.json` via Releases
+- `omnivox_auth.py` : fix SSO log Limoilou (WARN mismatch → `SSO OK (format lk=, C= absent)`)
+- `tests/` : test_adapter, test_config, test_models intégrés
+- `omnisync.spec` : spec PyInstaller pour build .exe futur
+- Checklist sécurité GitHub validée 6/6 : secrets exclus, .gitignore, README, LICENSE MIT, auth, commits clairs
 
-### 2. Analyse Google OAuth — 3 options (agents parallèles)
-- **Option 2A** (app centralisée) : viable pour 20 users, limite 100 sans vérification, `credentials.json` JAMAIS dans le repo (violation ToS)
-- **Option 2B** (script PowerShell `setup_google.ps1`) : guide étape par étape, ouvre deep-links console.cloud.google.com, vérifie présence fichier
-- **Option 2C** (auto-provision) : **IMPOSSIBLE** — API IAP de création OAuth Client ID dépréciée depuis janvier 2024
-- **Décision** : approche 2A+2B hybrid — credentials.json Alec via GitHub Releases + script pour power users
+### 2. Projet Google Cloud OmniSync (manuel)
+- Projet créé : `OmniSync` (compte `alec.senechal@gmail.com`)
+- API Google Calendar activée
+- Écran de consentement OAuth : type Externe, application publiée (évite écran "non vérifiée")
+- ID client OAuth créé : Application de bureau "OmniSync Desktop"
+- **BLOQUANT** : `credentials.json` pas encore téléchargé depuis la console
 
-### 3. Repo GitHub préparé (commit a44f243)
-- `.gitignore` corrigé : `step*.png`, `v2_*.png`, `after_signin.png` ajoutés (DA visible dans screenshots)
-- Nouveau repo git dans `C:\Users\alecs\Desktop\Omnisync` (l'ancien root était le home dir `C:\Users\alecs` — paths incorrects)
-- Commit : 61 fichiers, 10 073 insertions, remote `https://github.com/alecsenechal/omnisync.git`
-- **BLOQUANT** : repo GitHub pas encore créé → push échoue avec "Repository not found"
-
-### 4. Landing page — 5 corrections bloquantes appliquées
-Fichiers modifiés dans `C:\Users\alecs\Desktop\study-agent\landing-v3` :
-
-| Fichier | Correction |
-|---------|-----------|
-| `app/page.tsx` | HOW IT WORKS : 3 étapes → 4 (étape Google ajoutée en position 1) |
-| `app/page.tsx` | "dans ton Google Calendar existant" → "dans un calendrier dédié « OmniSync »" |
-| `app/page.tsx` | "Cours annulés barrés automatiquement" supprimé (fonctionnalité inexistante) |
-| `app/page.tsx` | FAQ cégeps : "V2" → "Ste-Foy et Garneau déjà dans le code, jamais testés" |
-| `components/TerminalDemo.tsx` | Ajout Chromium ~170 MB + prompts wizard interactif (DA, cégep, credentials.json) |
-| `components/CalendarDemo.tsx` | `[REMISE]` → `Remise:`, `[EXAM]` → `Exam:` |
+### 3. Fix URL install.bat
+- `install.bat` ligne 37 : `alec-senechal/omnisync` → `alecsenechal-droid/OmniSync` (URL GitHub Releases)
+- Corrige le téléchargement automatique de `credentials.json` lors de l'install
 
 ---
 
@@ -53,57 +42,77 @@ Fichiers modifiés dans `C:\Users\alecs\Desktop\study-agent\landing-v3` :
 
 | Type | Décision | Raison |
 |------|----------|--------|
-| Infrastructure | Nouveau repo git initialisé dans `Omnisync/` | Home dir (`C:\Users\alecs`) était le vrai root git — paths auraient été `Desktop/Omnisync/src/` sur GitHub |
-| Sécurité | `credentials.json` via GitHub Releases uniquement | ToS Google — jamais dans le repo public ; GitHub Secret Scanning révoque automatiquement |
-| Produit | Google OAuth : 2A+2B hybrid | 2C impossible (API dépréciée) ; 2B seul = friction identique ; 2A seul = fragilité (1 suspension = tous bloqués) |
-| Landing | 4 étapes HOW IT WORKS (Google obligatoire en étape 1) | Blocage invisible — testeur plantait à mi-setup.bat sans explication |
+| Infrastructure | Repo sous `alecsenechal-droid` (pas `alecsenechal`) | Compte GitHub actif |
+| Sécurité | `CLAUDE.md` dans `.gitignore` | Contient email + instructions privées Claude Code |
+| Distribution | `credentials.json` via GitHub Releases uniquement | ToS Google — jamais dans le repo |
+| Beta | OAuth consent publié (pas en test) | Évite l'écran "Application non vérifiée" chez les testeurs |
 
 ---
 
-## Ce qui a été livré (session 2026-06-02 #2)
+## Ce qui a été livré (session 2026-06-02 #3)
 
-### 5. Fix log SSO Limoilou
-- `omnivox_auth.py` : WARN SSO mismatch → `SSO OK (format lk=, C= absent)` pour les cégeps qui utilisent `lk=` au lieu de `C=CLI`
-- Appliqué dans `_navigate_to_lea_via_sso` + `_ensure_estd`
+### 4. Landing déployée en production
+- `vercel --prod` PASS — `https://landing-v3-blush.vercel.app`
 
-### 6. Fix test_adapter.py
-- `scrape_omnivox(dry_run=True)` retourne `(list, None, None)` — test déstructurait mal le tuple
-- 3/3 tests PASS
+### 5. Analyse 9 agents — plan onboarding beta unifié
+- **Friction #1** : Python absent (~60% machines) → winget auto-install dans setup.bat à coder
+- **Friction #2** : Git absent (~40%) → ZIP téléchargeable comme alternative
+- **Scope OAuth** : garder `calendar` complet confirmé — `calendars.insert` requiert scope complet
+- **Wizard redesign** : design 5 étapes numérotées, helpers `step_header/ask/validate_da` identifiés
+- **Beta strategy** : 2 testeurs directs live Discord (pas onboarding autonome) — valider sélecteurs avant UX
+
+---
+
+## Décisions prises (session #3)
+
+| Type | Décision | Raison |
+|------|----------|--------|
+| Technique | Scope OAuth `calendar` complet confirmé | `calendars.insert` requiert scope complet — `calendar.events` insuffisant |
+| Technique | winget Python auto-install dans setup.bat | Friction #1 identifiée par agent UX — ~60% sans Python |
+| Marché | Beta live Discord (pas onboarding autonome) | Agent sense-check : valider sélecteurs > polir UX |
+| Marché | Profil beta : Sciences humaines / Techniques admin (pas TI) | Représentatif de la vraie cible utilisateur |
+
+---
+
+## Message WhatsApp beta testeur (prêt à envoyer)
+
+> Hey, je teste un outil qui sync ton Omnivox (cours, travaux, examens) dans Google Calendar automatiquement. J'ai besoin d'une personne de [Ste-Foy / Garneau] pour valider que ça marche là-bas. Ça prend 15 min avec moi en live sur Discord. T'as juste besoin d'un ordi Windows. Intéressé(e) ?
 
 ---
 
 ## Ce qui N'est PAS fait
 
-- [ ] **Créer repo GitHub** — aller sur github.com → New repository `alecsenechal/omnisync` (public, vide), puis `git push -u origin main` — **PRIORITÉ IMMÉDIATE**
-- [ ] **Distribuer credentials.json** — créer une GitHub Release avec le fichier (pas dans le repo)
-- [ ] **Déployer landing corrigée** — `cd C:\Users\alecs\Desktop\study-agent\landing-v3 && vercel deploy --prod`
-- [ ] **WorkflowDemo.tsx** — `[REMISE]`/`[EXAM]` non corrigés dans les CAL_EVENTS (hors scope demandé)
-- [ ] **DEVLOG.md landing** — corriger les erreurs : Moodle marqué ❌ (faux), préfixes avec crochets (faux)
-- [ ] **setup_google.ps1** — script conçu par Agent 2B, pas encore intégré dans le repo
-- [ ] **Cours récurrents en production** — valider en août
-- [ ] **Beta testeur Ste-Foy ou Garneau** — priorité dès repo public
-- [ ] **Token Moodle : surveiller expiration**
+- [ ] **Télécharger credentials.json** depuis console Google Cloud → OmniSync Desktop → ⬇ — **PRIORITÉ IMMÉDIATE**
+- [ ] **Créer GitHub Release v1.0-beta** avec credentials.json attaché
+- [ ] **setup.bat winget Python auto-install** — si Python absent → `winget install Python.Python.3.12`
+- [ ] **Wizard redesign** — design exact prêt (5 étapes numérotées, helpers), code pas encore écrit
+- [ ] **Recruter 2 beta testeurs** — 1 Ste-Foy, 1 Garneau (message ci-dessus)
+- [ ] **Valider cours récurrents en prod** — début août
+- [ ] **Valider écriture Calendar automne 2026** — dès session automne
+- [ ] **ESTD examens finaux** — retester en août
+- [ ] **Token Moodle : surveiller expiration** — `run.bat token-moodle`
+- [ ] **WorkflowDemo.tsx landing** — `[REMISE]`/`[EXAM]` non alignés avec `Remise:`/`Exam:`
+- [ ] **DEVLOG.md landing** — Moodle marqué ❌ (faux), préfixes avec crochets (faux)
 
 ---
 
 ## Risques actifs
 
-1. **Repo GitHub inexistant** — bloquant pour tout testeur. Résolution : 2 min.
-2. **credentials.json non distribué** — bloquant même avec le repo. Résolution : GitHub Releases.
-3. **Token Moodle** : expiration silencieuse → `run.bat token-moodle`.
-4. **Sélecteurs csfoy/cegepgarneau** : non testés en production.
+1. **credentials.json non distribué** — bloquant pour tout beta testeur. Résolution : 5 min sur console Google Cloud.
+2. **Token Moodle** : expiration silencieuse → `run.bat token-moodle`.
+3. **Sélecteurs csfoy/cegepgarneau** : non testés en production — comportement inconnu.
 
 ---
 
 ## Prochaine étape (1 seule)
 
-**Créer le repo GitHub puis pousser.**
+**Télécharger le credentials.json du projet OmniSync et créer la GitHub Release.**
 
-1. Aller sur github.com → New repository
-   - Nom : `omnisync`, Compte : `alecsenechal`
-   - Visibilité : **Public** — sans README ni .gitignore (déjà locaux)
-2. Lancer :
 ```powershell
-cd C:\Users\alecs\Desktop\Omnisync
-git push -u origin main
+# Après téléchargement dans Downloads :
+# 1. Aller sur https://github.com/alecsenechal-droid/OmniSync/releases/new
+# 2. Tag : v1.0-beta
+# 3. Titre : "OmniSync v1.0 Beta"
+# 4. Attacher credentials.json
+# 5. Publier
 ```

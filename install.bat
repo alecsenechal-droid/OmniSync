@@ -31,5 +31,28 @@ if errorlevel 1 (
     exit /b 1
 )
 
+:: ── Credentials Google Calendar ──────────────────────────────────────────────
+set CREDS_DIR=%LOCALAPPDATA%\OmniSync
+set CREDS_FILE=%CREDS_DIR%\credentials.json
+set CREDS_URL=https://github.com/alecsenechal-droid/OmniSync/releases/latest/download/credentials.json
+
+if exist "%CREDS_FILE%" (
+    echo credentials.json Google deja present -- OK.
+) else (
+    echo Telechargement de credentials.json Google Calendar...
+    if not exist "%CREDS_DIR%" mkdir "%CREDS_DIR%"
+    powershell -NoProfile -Command "try { Invoke-WebRequest -Uri '%CREDS_URL%' -OutFile '%CREDS_FILE%' -UseBasicParsing -ErrorAction Stop; Write-Host 'credentials.json telecharge.' } catch { Write-Host '[AVERTISSEMENT] Impossible de telecharger credentials.json : ' + $_.Exception.Message; exit 0 }"
+    if not exist "%CREDS_FILE%" (
+        echo.
+        echo [AVERTISSEMENT] credentials.json introuvable apres telechargement.
+        echo Recuperez-le manuellement depuis :
+        echo   %CREDS_URL%
+        echo et placez-le dans : %CREDS_DIR%\
+        echo Vous pourrez quand meme utiliser OmniSync en mode --scrape-only.
+        echo.
+    )
+)
+:: ─────────────────────────────────────────────────────────────────────────────
+
 echo.
 echo Installation terminee.
